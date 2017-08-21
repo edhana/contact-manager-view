@@ -1,27 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
-
-function fetchContactDataFromAPI() {
-  const baseURL = 'http://localhost:8080/api/v1/contacts';
-  let encodeURI =  window.encodeURI(baseURL);
-  return axios.post(encodeURI, {
-    contact: {
-      firstname: 'Eduardo',
-      lastname: 'Marques',
-      email: 'eduardomarques@teste.com'
-    }
-  }).then(function(response) {
-    return response.data.data;
-  });
-}
+import { fetchContactDataFromAPI } from './api.js';
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isContactRegistered: false,
+      contactToken: '',
       contact: {
         id: null,
         firstname: '',
@@ -29,40 +14,37 @@ class Navbar extends Component {
         email: ''
       }
     }
+
+    this.updateContactLink = this.updateContactLink.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     //If cookie exist, retrieve the identification (user_id) from the cookie
     //TODO: Load cookie
     //If cookie exists verify the contact identification
     // use the contact id to retrieve the rest of the user data from the server
     //If cookie does not exists set to isContactRegistered to false
 
-    fetchContactDataFromAPI()
-      .then(function(contact){
-        console.log(contact);
-      });
-
-    this.setState({isContactRegistered: true,
-      contact: {
-        id: 1,
-        firstname: 'Eduardo',
-        lastname: 'Marques',
-        email: 'eduardomarques@teste.com'
-      }});
+    this.updateContactLink();
   }
 
-  handleLogout() {
-    /* this.seState({contact: null});*/
+  // change this function name for something related to retrieve the cookie and the token
+  updateContactLink() {
+    fetchContactDataFromAPI(10000).then(function (responseData) {
+      if(responseData){
+        this.setState({
+          contact: responseData
+        });
+      }
+    }.bind(this));
   }
 
-  render() {
+  updateContactInfo() {
     let button = null;
-
-    if(this.state.isContactRegistered) {
+    if(this.state.contact) {
       button = (
         <li className="nav-item">
-          <a className="nav-link" href="/" onClick={this.handleLogout}>Logout</a>
+          <a className="nav-link" href="/" >Logout</a>
         </li>
       );
     } else {
@@ -72,10 +54,13 @@ class Navbar extends Component {
         </li>
       );
     }
+    return button;
+  }
 
+  render() {
     let fullName = null;
 
-    if(this.state.contact != null) {
+    if(this.state.contact.id != null) {
       fullName = "(" + this.state.contact.firstname + " " + this.state.contact.lastname + ")";
     }
 
@@ -97,10 +82,11 @@ class Navbar extends Component {
             <li className="nav-item">
               <a className="nav-link" href="/">Services</a>
             </li>
-            {button}
+            {this.updateContactInfo}
           </ul>
         </div>
       </nav>
+
     );
   }
 }
