@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {addNewContact} from './api.js'
+import Cookies from 'universal-cookie';
 
 class AddContactForm extends Component {
   handleSubmit(e) {
@@ -12,10 +13,18 @@ class AddContactForm extends Component {
       email: this.refs.email.value
     };
 
-    let contactData = addNewContact(contact);
+    addNewContact(contact).then(function (data){
+      console.log(data);
+      if(data.token != null) {
+        // save the cookie
+        const cookies = new Cookies();
+        cookies.set('contactToken', data.token, { path: '/' })
 
-    // Save the token cookie
-    console.log(contactData);
+        // redirects
+        console.log("arrmaria");
+        this.props.history.push('/home');
+      }
+    });
   }
 
   render() {
