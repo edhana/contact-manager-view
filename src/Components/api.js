@@ -6,7 +6,7 @@ export function fetchContactDataFromAPI(token_id) {
   return axios.post(encodedURI, {
     token_id:  token_id
   }).then(function(response) {
-    return response.data.data;
+    return response.data;
   })
     .catch(function(error) {
       console.log(error);
@@ -20,7 +20,6 @@ export function addNewContact(contactInfo) {
   return axios.post(encodedURI, {
     contact: contactInfo
   }).then(function(response) {
-    // return contact data and the token data
     return response.data;
   });
 }

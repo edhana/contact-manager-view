@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Cookies from 'universal-cookie';
+import { NavLink } from "react-router-dom";
 import { fetchContactDataFromAPI } from './api.js';
 
 class Navbar extends Component {
@@ -6,7 +8,7 @@ class Navbar extends Component {
     super(props);
 
     this.state = {
-      contactToken: '',
+      contactToken: null,
       contact: {
         id: null,
         firstname: '',
@@ -14,47 +16,26 @@ class Navbar extends Component {
         email: ''
       }
     }
-
     this.updateContactLink = this.updateContactLink.bind(this);
   }
 
   componentDidMount() {
-    //If cookie exist, retrieve the identification (user_id) from the cookie
-    //TODO: Load cookie
-    //If cookie exists verify the contact identification
-    // use the contact id to retrieve the rest of the user data from the server
-    //If cookie does not exists set to isContactRegistered to false
-
-    this.updateContactLink();
+    const cookies = new Cookies();
+    let token = cookies.get('contactToken');
+    this.setState({contactToken: token});
+    this.updateContactLink(token);
   }
 
-  // change this function name for something related to retrieve the cookie and the token
-  updateContactLink() {
-    fetchContactDataFromAPI(10000).then(function (responseData) {
-      if(responseData){
-        this.setState({
-          contact: responseData
-        });
-      }
-    }.bind(this));
-  }
-
-  updateContactInfo() {
-    let button = null;
-    if(this.state.contact) {
-      button = (
-        <li className="nav-item">
-          <a className="nav-link" href="/" >Logout</a>
-        </li>
-      );
-    } else {
-      button = (
-        <li className="nav-item">
-          <a className="nav-link" href="/add_contact.html">Contact</a>
-        </li>
-      );
+  updateContactLink(token) {
+    if(token){
+      fetchContactDataFromAPI(token).then(function (responseData) {
+        if(responseData){
+          this.setState({
+            contact: responseData.data
+          });
+        }
+      }.bind(this));
     }
-    return button;
   }
 
   render() {
@@ -74,19 +55,20 @@ class Navbar extends Component {
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
+              <NavLink className="nav-link" to="/home">Home <span className="sr-only">(current)</span></NavLink> 
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">About</a>
+              <NavLink className="nav-link" to="/price">Price</NavLink> 
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">Services</a>
+              <a className="nav-link" href="#services">Services</a>
             </li>
-            {this.updateContactInfo}
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/addcontact">Contact</NavLink> 
+            </li>
           </ul>
         </div>
       </nav>
-
     );
   }
 }

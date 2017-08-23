@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {addNewContact} from './api.js'
 
-class AddContact extends Component {
+class AddContactForm extends Component {
   handleSubmit(e) {
     e.preventDefault();
 
@@ -12,7 +12,10 @@ class AddContact extends Component {
       email: this.refs.email.value
     };
 
-    addNewContact(contact);
+    let contactData = addNewContact(contact);
+
+    // Save the token cookie
+    console.log(contactData);
   }
 
   render() {
@@ -39,4 +42,4 @@ class AddContact extends Component {
   }
 }
 
-export default AddContact;
+export default AddContactForm;
