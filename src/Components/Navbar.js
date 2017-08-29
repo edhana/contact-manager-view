@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Cookies from 'universal-cookie';
 import { NavLink } from "react-router-dom";
 import { fetchContactDataFromAPI } from './api.js';
 
@@ -20,8 +19,7 @@ class Navbar extends Component {
   }
 
   componentDidMount() {
-    const cookies = new Cookies();
-    let token = cookies.get('contactToken');
+    let token = this.props.contactToken;
     this.setState({contactToken: token});
     this.updateContactLink(token);
   }
@@ -59,9 +57,6 @@ class Navbar extends Component {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/price">Price</NavLink> 
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#services">Services</a>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/addcontact">Contact</NavLink> 

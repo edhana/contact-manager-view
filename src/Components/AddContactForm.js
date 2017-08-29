@@ -3,6 +3,12 @@ import {addNewContact} from './api.js'
 import Cookies from 'universal-cookie';
 
 class AddContactForm extends Component {
+  constructor () {
+    super();
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
   handleSubmit(e) {
     e.preventDefault();
 
@@ -14,24 +20,24 @@ class AddContactForm extends Component {
     };
 
     addNewContact(contact).then(function (data){
-      console.log(data);
       if(data.token != null) {
+        console.log("entrei");
         // save the cookie
         const cookies = new Cookies();
         cookies.set('contactToken', data.token, { path: '/' })
-
-        // redirects
-        console.log("arrmaria");
-        this.props.history.push('/home');
       }
     });
+
+    this.props.onContactAdd();
+    // TODO: Verificar se não tem um duplo render gerado aqui
+    this.props.history.replace({ pathname: '/home'});
   }
 
   render() {
     return (
       <div className="container">
         <h3>Add Contact</h3>
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <lable>First Name</lable><br/>
             <input type="text" className="form-control" ref='firstname'/>
