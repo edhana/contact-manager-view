@@ -5,7 +5,7 @@ import Navbar from './Components/Navbar.js'
 import Home from './Components/Home.js'
 import Price from './Components/Price.js'
 import AddContactForm from './Components/AddContactForm.js'
-import { fetchContact } from './Components/api.js';
+import { fetchContact } from './Components/api.js'
 import './App.css'
 
 class App extends Component {

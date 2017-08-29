@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 class Home extends Component {
-  render() {
+  render () {
     return (
-      <div className="Home">
+      <div className='Home'>
         <h1>Welcome to the Contact Express App</h1>
       </div>
-    );
+    )
   }
 }
 
-export default Home;
+export default Home
