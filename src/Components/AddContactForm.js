@@ -21,16 +21,14 @@ class AddContactForm extends Component {
 
     addNewContact(contact).then(function (data){
       if(data.token != null) {
-        console.log("entrei");
         // save the cookie
         const cookies = new Cookies();
         cookies.set('contactToken', data.token, { path: '/' })
-      }
-    });
 
-    this.props.onContactAdd();
-    // TODO: Verificar se não tem um duplo render gerado aqui
-    this.props.history.replace({ pathname: '/home'});
+        this.props.onContactAdd();
+        this.props.history.replace({ pathname: '/home'});
+      }
+    }.bind(this));
   }
 
   render() {

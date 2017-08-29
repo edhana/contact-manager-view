@@ -1,45 +1,33 @@
 import React, { Component } from 'react';
 import { NavLink } from "react-router-dom";
-import { fetchContactDataFromAPI } from './api.js';
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
 
-    this.state = {
-      contactToken: null,
-      contact: {
-        id: null,
-        firstname: '',
-        lastname: '',
-        email: ''
-      }
-    }
-    this.updateContactLink = this.updateContactLink.bind(this);
+    this.state = {contact: null}
   }
 
-  componentDidMount() {
-    let token = this.props.contactToken;
-    this.setState({contactToken: token});
-    this.updateContactLink(token);
+  updateContactState (contactPromise) {
+    if (contactPromise) {
+      contactPromise.then((value) => {
+        this.setState({contact: value.data})
+      })
+    }
   }
 
-  updateContactLink(token) {
-    if(token){
-      fetchContactDataFromAPI(token).then(function (responseData) {
-        if(responseData){
-          this.setState({
-            contact: responseData.data
-          });
-        }
-      }.bind(this));
-    }
+  componentWillMount () {
+    this.updateContactState(this.props.contact)
+  }
+
+  componentWillReceiveProps () {
+    this.updateContactState(this.props.contact)
   }
 
   render() {
     let fullName = null;
 
-    if(this.state.contact.id != null) {
+    if(this.state.contact) {
       fullName = "(" + this.state.contact.firstname + " " + this.state.contact.lastname + ")";
     }
 
